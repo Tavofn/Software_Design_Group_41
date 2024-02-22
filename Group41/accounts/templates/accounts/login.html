@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Login</title>
+</head>
 <body>
-
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
-
+    <h2>Login</h2>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Login">
+    </form>
+    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
 </body>
 </html>
