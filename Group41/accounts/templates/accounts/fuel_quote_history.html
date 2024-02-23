@@ -1,9 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Quote History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        body {
+            background-color: #87CEEB; /* same color as the other pages */
+        }
+        .history_card {
+            width: auto; /* will automatically indent the table values */
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* Table styles */
+        .table-responsive {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
 <body>
-
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
-
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="history_card">
+                    <h3 class="form-title">Fuel Quote History</h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Quote Date</th>
+                                    <th>Gallons Requested</th>
+                                    <th>Delivery Address</th>
+                                    <th>Delivery Date</th>
+                                    <th>Suggested Price / gallon</th>
+                                    <th>Total Amount Due</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- for Dynamic rows  -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
