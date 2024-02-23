@@ -8,4 +8,4 @@ urlpatterns = [
     path('fuel_quote/', views.fuelQuote, name='fuel_quote'),
     path('profile_management/', views.profileManagement),
     path('registration/', views.registrationPage, name='registration'),
-]
+] 
