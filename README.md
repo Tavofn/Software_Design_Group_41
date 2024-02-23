@@ -1,10 +1,10 @@
-Prerequisites
+**Prerequisites**
 Before you begin, ensure you meet the following requirements:
 Python (version 3 or higher recommended)
 pip (Python package installer)
 Virtualenv (optional but recommended for keeping dependencies isolated)
 
-Installation
+**Installation**
 Follow these steps to get your development environment running:
 1. Clone the repository
     git clone https://github.com/Tavofn/Software_Design_Group_41.git
@@ -24,7 +24,7 @@ Follow these steps to get your development environment running:
     cd Group41
 
 
-Running the Server
+**Running the Server**
 To run the Django development server:
 
 Copy code
