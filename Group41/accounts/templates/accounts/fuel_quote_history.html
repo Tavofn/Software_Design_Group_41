@@ -29,6 +29,22 @@
         .table-responsive {
             margin-bottom: 20px;
         }
+        .close-btn { /*css for the back to quote form */
+            cursor: pointer;
+            font-size: 24px;
+            color: #000;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+        .close-btn:hover {
+            color: #555;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -36,6 +52,9 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="history_card">
+                    <div class="close-btn" onclick="goBackToQuote()">
+                        <i class="fas fa-arrow-left"></i> Quote Form
+                    </div>
                     <h3 class="form-title">Fuel Quote History</h3>
                     <div class="table-responsive">
                         <table class="table">
@@ -58,5 +77,10 @@
             </div>
         </div>
     </div>
+    <script> /* js for going back to the quoteform.html */
+        function goBackToQuote() {
+            window.location.href = '/fuel_quote/';
+        }
+    </script>
 </body>
 </html>
