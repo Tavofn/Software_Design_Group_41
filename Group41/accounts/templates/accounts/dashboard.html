@@ -1,0 +1,65 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+
+{% include 'accounts/status.html' %}
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h5 class="ml-3">CUSTOMERS</h5>
+		<hr>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>Customer</th>
+					<th>Phone</th>
+					<th></th>
+				</tr>
+
+				{% for customer in customers %}
+					<tr>
+						<td>{{ customer.name }}</td>
+						<td>{{ customer.phone }}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'customer' customer.id %}"><i class="fa fa-eye"> View</i></a></td>
+					</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h5>LAST 5 ORDERS</h5>
+		<hr>
+		<div class="card card-body">
+			<!-- <a class="btn btn-primary  btn-sm btn-block" href="#">Create Order</a> -->
+			<table class="table table-sm">
+				<tr>
+					<th>Product</th>
+					<th>Date Orderd</th>
+					<th>Status</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+
+				{% for order in last_five_orders %}
+					<tr>
+						<td>{{ order.product }}</td>
+						<td>{{ order.date_created }}</td>
+						<td>{{ order.status }}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'updateOrder' order.id %}"><i class="fa fa-edit"> Update</i></a></td> <!-- i can use order.pk instead of order.id -->
+						<td><a class="btn btn-sm btn-danger" href="{% url 'delete_order' order.id %}"><i class="fa fa-trash"> Remove</i></a></td>
+					</tr>
+				{% endfor %}
+				<a class="btn btn-primary btn-sm btn-block" href="{% url 'allOrders' %}">All Orders</a>
+				<!-- <a class="btn btn-sm btn-block" href="{% url 'allOrders' %}" style="background-color: #4d2e7c; color: whitesmoke;">All Orders</a> -->
+
+			</table>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

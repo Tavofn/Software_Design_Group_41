@@ -1,0 +1,15 @@
+Django==5.0.3
+annotated-types==0.6.0
+asgiref==3.8.1
+beautifulsoup4==4.12.3
+bootstrap4==0.1.0
+django-bootstrap4==24.1
+django-filter==24.2
+django-qr-code==4.0.1
+pillow==10.2.0
+pydantic==2.6.4
+pydantic_core==2.16.3
+segno==1.6.1
+soupsieve==2.5
+sqlparse==0.4.4
+typing_extensions==4.10.0
