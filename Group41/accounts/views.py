@@ -78,9 +78,33 @@ def customer(request, pk):
 
 
 @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin']) # we can add more like - ['admin', 'staff', etc]
+@allowed_users(allowed_roles=['admin']) # we can add more like - ['admin', 'staff', etc]
 def createOrder(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=3) # Parent model and Child model. extra=3 means you will see three times form to place order 3 items together. You can use extra=10 or extra=5 as you wish.
+    pk = int(pk)
+    
+    customer = Customer.objects.get(id=str(pk))
+
+    formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
+
+    # form = OrderForm(initial={'customer':customer}) # To see the customer in form, for which customer profile i viewd.
+
+    if request.method == 'POST':
+        # form = OrderForm(request.POST)
+        formset = OrderFormSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save()
+            return redirect('home')
+
+    context = {'formset':formset}
+    return render(request, 'accounts/order_form.html', context)
+
+
+
+
+@login_required(login_url='login')
+def createOrder_user(request, pk):
+    OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'delivery_address', 'delivery_date','price'),extra=1) # Parent model and Child model. extra=3 means you will see three times form to place order 3 items together. You can use extra=10 or extra=5 as you wish.
     pk = int(pk)-1
     
     customer = Customer.objects.get(id=str(pk))
@@ -98,6 +122,9 @@ def createOrder(request, pk):
 
     context = {'formset':formset}
     return render(request, 'accounts/order_form.html', context)
+
+
+
 
 
 @login_required(login_url='login')

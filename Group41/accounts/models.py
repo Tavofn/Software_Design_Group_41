@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 # Create your models here.
 
 class Customer(models.Model):
@@ -51,6 +51,11 @@ class Order(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=200, null=True, choices=STATUS)
     note = models.CharField(max_length=1000, null=True) # for custom Search
+    delivery_date = models.DateField(null=True, blank=True)  # Use DateField
+    delivery_address = models.CharField(max_length=200, null=True)
+    price = models.CharField(max_length=1000, null=True) # for custom Search
+
+
 
     def __str__(self):
         return self.product.name
