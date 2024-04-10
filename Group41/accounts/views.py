@@ -78,10 +78,12 @@ def customer(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin']) # we can add more like - ['admin', 'staff', etc]
+# @allowed_users(allowed_roles=['admin']) # we can add more like - ['admin', 'staff', etc]
 def createOrder(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=3) # Parent model and Child model. extra=3 means you will see three times form to place order 3 items together. You can use extra=10 or extra=5 as you wish.
-    customer = Customer.objects.get(id=pk)
+    pk = int(pk)-1
+    
+    customer = Customer.objects.get(id=str(pk))
 
     formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
 
