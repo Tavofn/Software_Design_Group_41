@@ -9,9 +9,7 @@ class OrderForm(ModelForm): # name of the model and Form. and inherit from Model
     class Meta:
         model = Order # which model
         fields = '__all__' # which fields are allowed - ['customer', 'product']. 
-        widgets = {
-            'delivery_date': DatePickerInput(options={"format": "MM/DD/YYYY"}),  # Confirm this is set correctly
-        }
+    
 
 class CreateUserForm(UserCreationForm):
     class Meta:
