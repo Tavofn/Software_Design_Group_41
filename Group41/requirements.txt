@@ -5,11 +5,14 @@ bootstrap4==0.1.0
 Django==5.0.3
 django-bootstrap-datepicker-plus==5.0.5
 django-bootstrap4==24.1
+django-extensions==3.2.3
 django-filter==24.2
 django-qr-code==4.0.1
 pillow==10.2.0
 pydantic==2.6.4
 pydantic_core==2.16.3
+pydotplus==2.0.2
+pyparsing==3.1.2
 segno==1.6.1
 soupsieve==2.5
 sqlparse==0.4.4
