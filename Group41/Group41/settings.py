@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'qr_code',
     'bootstrap4',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
