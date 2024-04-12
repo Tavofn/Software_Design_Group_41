@@ -41,7 +41,11 @@ Follow these steps to get your development environment running:
 >
 > source venv/bin/activate
 >
-> 3\. Navigate to the project directory
+> 3\. Install requirements.txt
+> 
+> pip install -r requirements.txt 
+>
+> 4\. Navigate to the project directory
 >
 > cd Group41
 
