@@ -4,7 +4,7 @@ from .models import *
 from .forms import OrderForm, CreateUserForm, CustomerForm
 from django.forms import inlineformset_factory ## multiple forms in forms
 from .filters import OrderFilter
-from django.contrib.auth.forms import UserCreationForm # django default form
+# from django.contrib.auth.forms import UserCreationForm # django default form
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required # restricted user access
@@ -105,7 +105,7 @@ def createOrder(request, pk):
 @login_required(login_url='login')
 def createOrder_user(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'delivery_address', 'delivery_date','price'),extra=1) # Parent model and Child model. extra=3 means you will see three times form to place order 3 items together. You can use extra=10 or extra=5 as you wish.
-    pk = int(pk)-1
+    pk = int(pk)
     
     customer = Customer.objects.get(id=str(pk))
 
@@ -163,7 +163,7 @@ def registerPage(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)  # Now UserCreationForm will replace by CreateUserForm
         if form.is_valid():
-            user = form.save() # to associated user with group
+            # user = form.save() # to associated user with group
             username = form.cleaned_data.get('username') # to associated user with group
             messages.success(request, 'Account was create for ' + username) # to associated user with group
             return redirect('login')
