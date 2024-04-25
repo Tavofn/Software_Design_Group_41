@@ -199,14 +199,21 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
 def userPage(request):
-    orders = request.user.customer.order_set.all()
+    customer = request.user.customer
+    orders = customer.order_set.all()
+    fuel_quotes = request.user.fuel_quotes.all()  # Accessing user-linked fuel quotes
 
     total_orders = orders.count()
-
     delivered = orders.filter(status='Delivered').count()
     pending = orders.filter(status='Pending').count()
 
-    context = {'orders':orders, 'total_orders':total_orders, 'delivered':delivered, 'pending':pending}
+    context = {
+        'orders': orders,
+        'fuel_quotes': fuel_quotes,
+        'total_orders': total_orders,
+        'delivered': delivered,
+        'pending': pending
+    }
     return render(request, 'accounts/user.html', context)
 
 
@@ -278,3 +285,17 @@ def quote_submission(request):
 
     # If not POST, just show the form again
     return render(request, 'order_form.html')
+
+@login_required(login_url='login')
+@admin_only  # If customer then redirect to user-page and if admin redirect to view_func
+def allOrders(request):
+    orders = Order.objects.all()  # Existing order data
+    fuel_quotes = FuelQuote.objects.all()  # Retrieve all fuel quotes
+    
+    context = {
+        'orders': orders,
+        'fuel_quotes': fuel_quotes,  # Add fuel quotes to the context
+    }
+
+    return render(request, 'accounts/all_orders.html', context)
+

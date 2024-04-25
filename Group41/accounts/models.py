@@ -1,22 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
 from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.conf import settings
 # Create your models here.
 
 class FuelQuote(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="fuel_quotes", null=True, blank=True)
     gallons_requested = models.FloatField()
     state = models.CharField(max_length=100)
     has_history = models.BooleanField()
     suggested_price = models.FloatField()
     total_amount = models.FloatField()
     date_created = models.DateTimeField(auto_now_add=True)
-    address = models.CharField(max_length=255, default='Unknown')  # Default value added
-    city = models.CharField(max_length=100, default='Unknown')     # Default value added
-    zip_code = models.CharField(max_length=20, default='00000')    # Default value added
+    address = models.CharField(max_length=255, default='Unknown')
+    city = models.CharField(max_length=100, default='Unknown')
+    zip_code = models.CharField(max_length=20, default='00000')
 
     def __str__(self):
         return f"{self.address}, {self.city}, {self.state} - {self.zip_code}"
     
+
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE) # one to one relationships(one customer can have one user and one user can have one customer)
     name = models.CharField(max_length=200, null=True)
