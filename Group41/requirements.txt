@@ -17,3 +17,4 @@ segno==1.6.1
 soupsieve==2.5
 sqlparse==0.4.4
 typing_extensions==4.10.0
+coverage
