@@ -3,7 +3,7 @@
 <html>
 
 <head>
-	<title>Login</title>
+	<title>Login - EcoFuel Quotes</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -11,33 +11,52 @@
 		integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous" />
 	<link rel="icon" type="image/x-icon" href="{% static 'images/crm.png' %}">
 	<style>
-		body,
-		html {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			background: #4d6be3 !important;
+		body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: url("{% static 'images/login2.png' %}") no-repeat center center fixed;
+            background-size: cover;
+        }
+		.welcome_header {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+            color: white;
+        }
+
+        .main_title {
+			color: #0d3998;
+            font-size: 40px; 
+            font-weight: bold;
+        }
+
+        .sub_title {
+			color: #6db6d1;
+            font-size: 32px; 
+        }
+		.main_title, .sub_title {
+    		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 		}
 
-		.user_card {
-			width: 350px;
-			margin-top: 50px;
-			margin-bottom: auto;
-			background: #7CE5FD;
-			/* background: #c2f0ee; */
-			position: relative;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			padding: 10px;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-				0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-				0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-				0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			border-radius: 5px;
-		}
+
+        .user_card {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.8);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 5px;
+        }
 
 		.form_container {
 			margin-top: 20px;
@@ -92,67 +111,46 @@
 </head>
 
 <body>
-	<br />
-	<img src="{% static 'images/l.png' %}" class="rounded" alt="IMG"
-		style="display: block; margin-left: auto; margin-right: auto; width: 25%" />
-		<br>
-	<div class="container-fluid">
-		<div class="card card-body" style="background: #3b47a1">
-			<div class="row">
-				<div class="col-12 col-md-6 d-flex col ld-flex justify-content-center" data-tilt>
-					<img src="{% static 'images/login1.png' %}" alt="IMG" width="75%" height="" />
-				</div>
-				<div class="col-12 col-md-6 d-flex col d-flex justify-content-center">
-					<div class="user_card">
-						<div class="d-flex justify-content-center">
-							<h3 id="form-title">LOGIN</h3>
-						</div>
-						<div class="d-flex justify-content-center form_container">
-							<form method="POST" action="">
-								{% csrf_token %}
-								<div class="input-group mb-3">
-									<div class="input-group-append">
-										<span class="input-group-text"><i class="fas fa-user"></i></span>
-									</div>
+    <div class="user_card">
+        <div class="d-flex justify-content-center">
+            <h3 id="form-title">LOGIN</h3>
+        </div>
+        <div class="d-flex justify-content-center form_container">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input type="text" name="username" placeholder="Username..." class="form-control" />
+                </div>
 
-									<input type="text" name="username" placeholder="Username..." class="form-control" />
-								</div>
+                <div class="input-group mb-2">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input type="password" name="password" placeholder="Password..." class="form-control" />
+                </div>
 
-								<div class="input-group mb-2">
-									<div class="input-group-append">
-										<span class="input-group-text"><i class="fas fa-key"></i></span>
-									</div>
+                <div class="d-flex justify-content-center mt-3 login_container">
+                    <input class="btn login_btn" type="submit" value="Login" />
+                </div>
+            </form>
+        </div>
+        
+        {% for message in messages %}
+            <p id="messages" class="rounded">{{ message }}</p>
+        {% endfor %}
 
-									<input type="password" name="password" placeholder="Password..."
-										class="form-control" />
-								</div>
-
-								<div class="d-flex justify-content-center mt-3 login_container">
-									<input class="btn login_btn" type="submit" value="Login" />
-								</div>
-							</form>
-						</div>
-						
-						{% for message in messages %}
-							<p id="messages" class="rounded">{{message}}</p>
-						{% endfor %}
-
-						<div class="mt-4">
-							<div class="d-flex justify-content-center links">
-								Don't have an account?
-								<a href="{% url 'register' %}" class="ml-2" style="color: #3b47a1">Sign Up</a>
-							</div>
-							<div class="d-flex justify-content-center links">
-								Forgot Password?
-								<a href="{% url 'reset_password' %}" class="ml-2" style="color: #3b47a1">Reset
-									Password</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="mt-4">
+            <div class="d-flex justify-content-center links">
+                Don't have an account? <a href="{% url 'register' %}" class="ml-2" style="color: #3b47a1">Sign Up</a>
+            </div>
+            <div class="d-flex justify-content-center links">
+                Forgot Password? <a href="{% url 'reset_password' %}" class="ml-2" style="color: #3b47a1">Reset Password</a>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
