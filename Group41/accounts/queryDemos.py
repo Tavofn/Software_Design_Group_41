@@ -1,4 +1,3 @@
-# Before do this need to type python manage.py shell in cmd
 
 #***(1)Returns all customers from customer table
 customers = Customer.objects.all()
@@ -48,6 +47,7 @@ for order in firstCustomer.order_set.all():
 		allOrders[order.product.name] = 1
 
 #Returns: allOrders: {'Ball': 2, 'BBQ Grill': 1}
+  # Check output to confirm data is present
 
 
 #RELATED SET EXAMPLE
@@ -61,3 +61,9 @@ class ChildModel(models.Model):
 parent = ParentModel.objects.first()
 #Returns all child models related to parent
 parent.childmodel_set.all()
+
+all_fuel_quotes = FuelQuote.objects.all()
+specific_fuel_quote = FuelQuote.objects.get(id=1)  # Replace '1' with the desired ID
+quotes_in_texas = FuelQuote.objects.filter(state='Texas')
+ordered_by_date = FuelQuote.objects.all().order_by('-date_created')
+high_volume_quotes = FuelQuote.objects.filter(gallons_requested__gt=1000)  # Greater than 1000 gallons
