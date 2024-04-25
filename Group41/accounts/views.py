@@ -165,7 +165,7 @@ def registerPage(request):
         if form.is_valid():
             # user = form.save() # to associated user with group
             username = form.cleaned_data.get('username') # to associated user with group
-            messages.success(request, 'Account was create for ' + username) # to associated user with group
+            messages.success(request, 'Account was created for ' + username) # to associated user with group
             return redirect('login')
 
     context = {'form':form}
