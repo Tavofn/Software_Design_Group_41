@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required # restricted user acce
 from .decorators import unauthenticated_user, allowed_users, admin_only # custom restricted and allowed user acces
 from django.contrib.auth.models import Group # Django signal to associated user with group
 from django.http import JsonResponse #for pricing module
+from .models import FuelQuote
 
 # Create your views here.
 @login_required(login_url='login')
@@ -247,3 +248,33 @@ def get_quote(request):
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+    
+def quote_submission(request):
+    if request.method == 'POST':
+        # Retrieve form data
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zip')
+        gallons_requested = request.POST.get('gallons')
+        has_history = request.POST.get('has_history') == 'on'
+        suggested_price = request.POST.get('suggested_price')
+        total_amount = request.POST.get('total_amount')
+
+        # Create a new FuelQuote instance and save to database
+        FuelQuote.objects.create(
+            address=address,
+            city=city,
+            state=state,
+            zip_code=zip_code,
+            gallons_requested=gallons_requested,
+            has_history=has_history,
+            suggested_price=suggested_price,
+            total_amount=total_amount
+        )
+        
+        # Redirect to a new URL:
+        return redirect('allOrders')  # Replace 'success_url' with the name of the URL to redirect to upon success
+
+    # If not POST, just show the form again
+    return render(request, 'order_form.html')

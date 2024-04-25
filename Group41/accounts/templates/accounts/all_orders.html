@@ -1,4 +1,4 @@
-{%  extends 'accounts/main.html' %}
+{% extends 'accounts/main.html' %}
 
 {% block content %}
 
@@ -8,25 +8,37 @@
             <div class="col-1"></div>
 			<div class="col-md-10">
 				<div class="card card-body" style="background-color: #4d2e7c; color: whitesmoke; text-align: center;"> 
-					<h5>All Orders</h5>
+					<h5>All Fuel Orders</h5>
 				</div>
 				<div class="card card-body">
 					<table class="table">
-						<tr> <!--Our table of classes-->
-                            <th>Product</th>
+						<tr>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>ZIP Code</th>
+                            <th>Gallons Requested</th>
+                            <th>Has History</th>
+                            <th>Suggested Price</th>
+                            <th>Total Amount</th>
                             <th>Date Ordered</th>
-                            <th>Status</th>
-                            <th>Update</th>
-                            <th>Remove</th>
                         </tr>
         
                         {% for order in orders %}
                             <tr>
-                                <td>{{ order.product }}</td>
-                                <td>{{ order.date_created }}</td>
-                                <td>{{ order.status }}</td>
-                                <td><a class="btn btn-sm btn-info" href="{% url 'updateOrder' order.id %}"><i class="fa fa-edit"> Update</i></a></td> <!-- i can use order.pk instead of order.id -->
-                                <td><a class="btn btn-sm btn-danger" href="{% url 'delete_order' order.id %}"><i class="fa fa-trash"> Remove</i></a></td>
+                                <td>{{ order.address }}</td>
+                                <td>{{ order.city }}</td>
+                                <td>{{ order.state }}</td>
+                                <td>{{ order.zip_code }}</td>
+                                <td>{{ order.gallons_requested }}</td>
+                                <td>{{ order.has_history|yesno:"Yes,No" }}</td>
+                                <td>${{ order.suggested_price|floatformat:2 }}</td>
+                                <td>${{ order.total_amount|floatformat:2 }}</td>
+                                <td>{{ order.date_created|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="9">No orders found.</td>
                             </tr>
                         {% endfor %}
 

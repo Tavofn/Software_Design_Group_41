@@ -9,17 +9,9 @@
   <div class="col-md-2"></div>
   <div class="col-md-8">
     <div class="card card-body">
-      <form id="quote_form" action="" method="POST">
+      <form id="quote_form" action="{% url 'submit_quote' %}" method="POST">
         {% csrf_token %}
         
-        {{ formset.management_form }}
-        {% for form in formset %}
-          {% if forloop.first %}
-            {% bootstrap_form form %}
-            <hr>
-          {% endif %}
-        {% endfor %}
-
         <!-- Additional Fields for Pricing -->
       <div class="form-group">
           <label for="address">Address:</label>

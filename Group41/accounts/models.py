@@ -3,6 +3,20 @@ from django.contrib.auth.models import User
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 # Create your models here.
 
+class FuelQuote(models.Model):
+    gallons_requested = models.FloatField()
+    state = models.CharField(max_length=100)
+    has_history = models.BooleanField()
+    suggested_price = models.FloatField()
+    total_amount = models.FloatField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    address = models.CharField(max_length=255, default='Unknown')  # Default value added
+    city = models.CharField(max_length=100, default='Unknown')     # Default value added
+    zip_code = models.CharField(max_length=20, default='00000')    # Default value added
+
+    def __str__(self):
+        return f"{self.address}, {self.city}, {self.state} - {self.zip_code}"
+    
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE) # one to one relationships(one customer can have one user and one user can have one customer)
     name = models.CharField(max_length=200, null=True)
@@ -51,9 +65,12 @@ class Order(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=200, null=True, choices=STATUS)
     note = models.CharField(max_length=1000, null=True) # for custom Search
-    delivery_date = models.DateField(null=True, blank=True)  # Use DateField
-    delivery_address = models.CharField(max_length=200, null=True)
     price = models.CharField(max_length=1000, null=True) # for custom Search
+    delivery_date = models.DateField(null=True, blank=True)
+    delivery_address = models.CharField(max_length=200, null=True)  # New field
+    city = models.CharField(max_length=100, null=True)  # New field
+    state = models.CharField(max_length=100, null=True)  # New field
+    zip_code = models.CharField(max_length=20, null=True)  # New field
 
 
 

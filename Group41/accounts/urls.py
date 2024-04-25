@@ -10,6 +10,7 @@ urlpatterns = [
     path('create_order_user/<str:pk>/', views.createOrder_user, name='createOrder_user'),
 
     path('update_order/<str:pk>/', views.updateOrder, name='updateOrder'),
+    path('submit_quote/', views.quote_submission, name='submit_quote'),
     path('get_quote/', views.get_quote, name='get_quote'),
     path('delete_order/<str:pk>/', views.deleteOrder, name='delete_order'),
     path('all-orders/', views.allOrders, name='allOrders'),
