@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required # restricted user access
 from .decorators import unauthenticated_user, allowed_users, admin_only # custom restricted and allowed user acces
 from django.contrib.auth.models import Group # Django signal to associated user with group
+from django.http import JsonResponse #for pricing module
 
 # Create your views here.
 @login_required(login_url='login')
@@ -221,3 +222,28 @@ def accountSettings(request):
 
     context = {'form':form}
     return render(request, 'accounts/account_settings.html', context)
+
+
+def get_quote(request):
+    # Your calculation logic here
+    try:
+        gallons_requested = float(request.GET.get('gallons', 0))
+        state = request.GET.get('state', '')
+        has_history = request.GET.get('has_history', 'false').lower() == 'true'
+        
+        current_price = 1.50  
+        location_factor = 0.02 if state == 'Texas' else 0.04
+        rate_history_factor = 0.01 if has_history else 0.00
+        gallons_requested_factor = 0.02 if gallons_requested > 1000 else 0.03
+        company_profit_factor = 0.10
+        
+        margin = current_price * (location_factor - rate_history_factor + gallons_requested_factor + company_profit_factor)
+        suggested_price = current_price + margin
+        total_amount = gallons_requested * suggested_price
+        
+        return JsonResponse({
+            'suggested_price': round(suggested_price, 2),
+            'total_amount': round(total_amount, 2)
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
