@@ -37,21 +37,21 @@ class TestViews(TestCase):
         self.client.login(username='Admin', password='table123456')
         response = self.client.get(self.home_url)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/user.html')
         
     def test_home_admin_GET(self):
         self.client.login(username='Admin_user', password='table123456')
         response = self.client.get(self.home_url_admin)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/dashboard.html')
 
     def test_create_order_GET(self):
         self.client.login(username='Admin', password='table123456')
         response = self.client.get(self.create_order_url)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/order_form.html')
 
     def test_create_order_POST_adds_new_order(self):
@@ -73,12 +73,12 @@ class TestViews(TestCase):
         response = self.client.post(self.create_order_url, data)
         print("Orders after POST:", Order.objects.count(), list(Order.objects.values()))
         # Check response
-        self.assertEquals(response.status_code, 302)  # Expecting a redirect after successful form submission
-        self.assertEquals(Order.objects.count(), 2)  # Check that an Order has been created
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect after successful form submission
+        self.assertEqual(Order.objects.count(), 2)  # Check that an Order has been created
         new_order = Order.objects.get(id=2)
   
-        self.assertEquals(new_order.product, self.product_instance)
-        self.assertEquals(new_order.delivery_address, '123 Test St')
+        self.assertEqual(new_order.product, self.product_instance)
+        self.assertEqual(new_order.delivery_address, '123 Test St')
 
     # def test_delete_order_POST(self):
     #     self.client.login(username='Admin', password='table123456')
