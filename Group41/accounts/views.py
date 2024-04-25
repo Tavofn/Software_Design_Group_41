@@ -1,21 +1,16 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import *
-from .forms import OrderForm, CreateUserForm, CustomerForm
-from django.forms import inlineformset_factory ## multiple forms in forms
-from .filters import OrderFilter
-# from django.contrib.auth.forms import UserCreationForm # django default form
-from django.contrib import messages
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required # restricted user access
-from .decorators import unauthenticated_user, allowed_users, admin_only # custom restricted and allowed user acces
-from django.contrib.auth.models import Group # Django signal to associated user with group
-from django.http import JsonResponse #for pricing module
-from .models import FuelQuote
+from django.forms import inlineformset_factory
+from django.contrib import messages
+from .models import Order, Customer, Product, FuelQuote
+from .forms import OrderForm, CreateUserForm, CustomerForm
+from .filters import OrderFilter
+from .decorators import unauthenticated_user, allowed_users, admin_only
 
-# Create your views here.
 @login_required(login_url='login')
-@admin_only # if customer the redirect to user-page and if admin redirect to view_func
+@admin_only
 def home(request):
     last_five_orders = Order.objects.all().order_by('-date_created')[:5]
     orders = Order.objects.all()
@@ -28,16 +23,87 @@ def home(request):
     pending = orders.filter(status='Pending').count()
 
     context = {
-        'last_five_orders':last_five_orders,
-        'orders':orders,
-        'customers':customers,
-        'total_customers':total_customers,
-        'total_orders':total_orders,
-        'delivered':delivered,
-        'pending':pending
+        'last_five_orders': last_five_orders,
+        'orders': orders,
+        'customers': customers,
+        'total_customers': total_customers,
+        'total_orders': total_orders,
+        'delivered': delivered,
+        'pending': pending
     }
-
     return render(request, 'accounts/dashboard.html', context)
+
+def get_quote(request):
+    try:
+        gallons_requested = float(request.GET.get('gallons', 0))
+        state = request.GET.get('state', '')
+        has_history = request.GET.get('has_history', 'false').lower() == 'true'
+
+        current_price = 1.50
+        location_factor = 0.02 if state == 'Texas' else 0.04
+        rate_history_factor = 0.01 if has_history else 0.00
+        gallons_requested_factor = 0.02 if gallons_requested > 1000 else 0.03
+        company_profit_factor = 0.10
+
+        margin = current_price * (location_factor - rate_history_factor + gallons_requested_factor + company_profit_factor)
+        suggested_price = current_price + margin
+        total_amount = gallons_requested * suggested_price
+
+        return JsonResponse({
+            'suggested_price': round(suggested_price, 2),
+            'total_amount': round(total_amount, 2)
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+def quote_submission(request):
+    if request.method == 'POST':
+        FuelQuote.objects.create(
+            address=request.POST.get('address'),
+            city=request.POST.get('city'),
+            state=request.POST.get('state'),
+            zip_code=request.POST.get('zip'),
+            gallons_requested=request.POST.get('gallons'),
+            has_history=request.POST.get('has_history') == 'on',
+            suggested_price=request.POST.get('suggested_price'),
+            total_amount=request.POST.get('total_amount')
+        )
+        return redirect('allOrders')
+    return render(request, 'order_form.html')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'customer'])
+def display_quotes(request):
+    quotes = FuelQuote.objects.all()
+    return render(request, 'user.html', {'quotes': quotes})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def userPage(request):
+    # Ensure your FuelQuote model has a customer field linking it to the Customer model
+    # This assumes a ForeignKey relationship from FuelQuote to Customer named 'customer'
+    quotes = FuelQuote.objects.filter(customer=request.user.customer)
+    total_quotes = quotes.count()
+    delivered = quotes.filter(status='Delivered').count()
+    pending = quotes.filter(status='Pending').count()
+
+    context = {
+        'orders': quotes,  
+        'total_orders': total_quotes,
+        'delivered': delivered,
+        'pending': pending
+    }
+    return render(request, 'accounts/user.html', context)
+
+@login_required(login_url='login')
+def accountSettings(request):
+    customer = request.user.customer
+    form = CustomerForm(instance=customer)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save()
+    return render(request, 'accounts/account_settings.html', {'form': form})
 
 @login_required(login_url='login')
 @admin_only # if customer the redirect to user-page and if admin redirect to view_func
@@ -199,14 +265,10 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
 def userPage(request):
-    orders = request.user.customer.order_set.all()
-
-    total_orders = orders.count()
-
-    delivered = orders.filter(status='Delivered').count()
-    pending = orders.filter(status='Pending').count()
-
-    context = {'orders':orders, 'total_orders':total_orders, 'delivered':delivered, 'pending':pending}
+    quotes = FuelQuote.objects.all()  # Fetch all quotes
+    context = {
+        'quotes': quotes
+    }
     return render(request, 'accounts/user.html', context)
 
 
@@ -225,56 +287,13 @@ def accountSettings(request):
     return render(request, 'accounts/account_settings.html', context)
 
 
-def get_quote(request):
-    # Your calculation logic here
-    try:
-        gallons_requested = float(request.GET.get('gallons', 0))
-        state = request.GET.get('state', '')
-        has_history = request.GET.get('has_history', 'false').lower() == 'true'
-        
-        current_price = 1.50  
-        location_factor = 0.02 if state == 'Texas' else 0.04
-        rate_history_factor = 0.01 if has_history else 0.00
-        gallons_requested_factor = 0.02 if gallons_requested > 1000 else 0.03
-        company_profit_factor = 0.10
-        
-        margin = current_price * (location_factor - rate_history_factor + gallons_requested_factor + company_profit_factor)
-        suggested_price = current_price + margin
-        total_amount = gallons_requested * suggested_price
-        
-        return JsonResponse({
-            'suggested_price': round(suggested_price, 2),
-            'total_amount': round(total_amount, 2)
-        })
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    
-def quote_submission(request):
-    if request.method == 'POST':
-        # Retrieve form data
-        address = request.POST.get('address')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        zip_code = request.POST.get('zip')
-        gallons_requested = request.POST.get('gallons')
-        has_history = request.POST.get('has_history') == 'on'
-        suggested_price = request.POST.get('suggested_price')
-        total_amount = request.POST.get('total_amount')
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'customer'])  # Assuming you want both to access
+def display_quotes(request):
+    quotes = FuelQuote.objects.all()
+    print("Display Quotes View Called")
+    print("Number of quotes:", len(quotes))
+    for quote in quotes:
+        print(quote)  # Detailed print of each quote object
+    return render(request, 'user.html', {'quotes': quotes})
 
-        # Create a new FuelQuote instance and save to database
-        FuelQuote.objects.create(
-            address=address,
-            city=city,
-            state=state,
-            zip_code=zip_code,
-            gallons_requested=gallons_requested,
-            has_history=has_history,
-            suggested_price=suggested_price,
-            total_amount=total_amount
-        )
-        
-        # Redirect to a new URL:
-        return redirect('allOrders')  # Replace 'success_url' with the name of the URL to redirect to upon success
-
-    # If not POST, just show the form again
-    return render(request, 'order_form.html')

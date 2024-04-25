@@ -14,6 +14,7 @@ urlpatterns = [
     path('get_quote/', views.get_quote, name='get_quote'),
     path('delete_order/<str:pk>/', views.deleteOrder, name='delete_order'),
     path('all-orders/', views.allOrders, name='allOrders'),
+    path('quotes/', views.display_quotes, name='display_quotes'),
     path('register/', views.registerPage, name='register'),
     path('login/', views.loginPage, name='login'),
     path('logout/', views.logoutUser, name='logout'),

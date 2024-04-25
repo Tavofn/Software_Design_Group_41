@@ -1,32 +1,36 @@
 {% extends 'accounts/main.html' %}
 
-{% block content %}
-
 {% include 'accounts/status.html' %}
 
+{% block content %}
 <div class="row">
-	<div class="col-md">
-		<div class="card card-body">
-			<table class="table table-sm">
-				<tr>
-					<th>Product</th>
-					<th>Category</th>
-					<th>Date Orderd</th>
-					<th>Status</th>
-				</tr>
-
-				{% for order in orders %}
-					<tr>
-						<td>{{ order.product }}</td>
-						<td>{{ order.product.category }}</td>
-						<td>{{ order.date_created }}</td>
-						<td>{{ order.status }}</td>
-					</tr>
-				{% endfor %}
-
-			</table>
-		</div>
-	</div>
+    <div class="col-md">
+        <div class="card card-body">
+            <table class="table table-sm">
+                <tr>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>ZIP Code</th>
+                    <th>Gallons Requested</th>
+                    <th>Suggested Price</th>
+                    <th>Total Amount</th>
+                    <th>Date Created</th>
+                </tr>
+                {% for quote in quotes %}
+                <tr>
+                    <td>{{ quote.address }}</td>
+                    <td>{{ quote.city }}</td>
+                    <td>{{ quote.state }}</td>
+                    <td>{{ quote.zip_code }}</td>
+                    <td>{{ quote.gallons_requested }}</td>
+                    <td>${{ quote.suggested_price }}</td>
+                    <td>${{ quote.total_amount }}</td>
+                    <td>{{ quote.date_created }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 </div>
-
 {% endblock %}

@@ -15,7 +15,7 @@ class FuelQuote(models.Model):
     zip_code = models.CharField(max_length=20, default='00000')    # Default value added
 
     def __str__(self):
-        return f"{self.address}, {self.city}, {self.state} - {self.zip_code}"
+        return f"{self.address}, {self.city}, {self.state},{self.zip_code}"
     
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE) # one to one relationships(one customer can have one user and one user can have one customer)
