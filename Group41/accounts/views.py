@@ -109,7 +109,7 @@ def accountSettings(request):
 @login_required(login_url='login')
 @admin_only # if customer the redirect to user-page and if admin redirect to view_func
 def allOrders(request):
-    orders = Order.objects.all()
+    orders = FuelQuote.objects.all()
     context = {
         'orders':orders,
     }
@@ -130,7 +130,7 @@ def products(request):
 def customer(request, pk):
     customer = Customer.objects.get(id=pk)
 
-    orders = customer.order_set.all()  # order_set means customers child order from model fields
+    orders = FuelQuote.objects.filter(customer=customer) # order_set means customers child order from model fields
     order_count = orders.count()
 
     myFilter = OrderFilter(request.GET, queryset=orders)

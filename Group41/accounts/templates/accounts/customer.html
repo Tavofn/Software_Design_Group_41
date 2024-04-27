@@ -60,7 +60,7 @@
 			<table class="table table-sm">
 				<tr>
 					<th>Product</th>
-					<th>Category</th>
+				
 					<th>Date Orderd</th>
 					<th>Status</th>
 					<th>Update</th>
@@ -69,8 +69,8 @@
 
 				{% for order in orders %}
 					<tr>
-						<td>{{ order.product }}</td>
-						<td>{{ order.product.category }}</td>
+						<td>Oil</td>
+						<!-- <td>{{ order.product.category }}</td> -->
 						<td>{{ order.date_created }}</td>
 						<td>{{ order.status }}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'updateOrder' order.id %}"><i class="fa fa-edit"> Update</i></a></td> <!-- i can use order.pk instead of order.id -->
