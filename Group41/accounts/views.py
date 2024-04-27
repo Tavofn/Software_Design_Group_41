@@ -173,7 +173,7 @@ def createOrder(request, pk):
 @login_required(login_url='login')
 def createOrder_user(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'delivery_address', 'delivery_date','price'),extra=1) # Parent model and Child model. extra=3 means you will see three times form to place order 3 items together. You can use extra=10 or extra=5 as you wish.
-    pk = int(pk)
+    pk = int(pk)-2
     
     customer = Customer.objects.get(id=str(pk))
 
@@ -265,7 +265,7 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
 def userPage(request):
-    quotes = FuelQuote.objects.all()  # Fetch all quotes
+    quotes = request.user.customer.order_set.all()
     context = {
         'quotes': quotes
     }
