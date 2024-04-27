@@ -59,6 +59,7 @@ def get_quote(request):
 def quote_submission(request):
     if request.method == 'POST':
         FuelQuote.objects.create(
+            customer = request.user.customer,
             address=request.POST.get('address'),
             city=request.POST.get('city'),
             state=request.POST.get('state'),
@@ -77,23 +78,23 @@ def display_quotes(request):
     quotes = FuelQuote.objects.all()
     return render(request, 'user.html', {'quotes': quotes})
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['customer'])
-def userPage(request):
-    # Ensure your FuelQuote model has a customer field linking it to the Customer model
-    # This assumes a ForeignKey relationship from FuelQuote to Customer named 'customer'
-    quotes = FuelQuote.objects.filter(customer=request.user.customer)
-    total_quotes = quotes.count()
-    delivered = quotes.filter(status='Delivered').count()
-    pending = quotes.filter(status='Pending').count()
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['customer'])
+# def userPage(request):
+#     # Ensure your FuelQuote model has a customer field linking it to the Customer model
+#     # This assumes a ForeignKey relationship from FuelQuote to Customer named 'customer'
+#     quotes = FuelQuote.objects.filter(customer=request.user.customer)
+#     total_quotes = quotes.count()
+#     delivered = quotes.filter(status='Delivered').count()
+#     pending = quotes.filter(status='Pending').count()
 
-    context = {
-        'orders': quotes,  
-        'total_orders': total_quotes,
-        'delivered': delivered,
-        'pending': pending
-    }
-    return render(request, 'accounts/user.html', context)
+#     context = {
+#         'orders': quotes,  
+#         'total_orders': total_quotes,
+#         'delivered': delivered,
+#         'pending': pending
+#     }
+#     return render(request, 'accounts/user.html', context)
 
 @login_required(login_url='login')
 def accountSettings(request):
@@ -265,7 +266,7 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
 def userPage(request):
-    quotes = request.user.customer.order_set.all()
+    quotes = FuelQuote.objects.filter(customer=request.user.customer)
     context = {
         'quotes': quotes
     }
